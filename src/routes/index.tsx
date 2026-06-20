@@ -948,21 +948,38 @@ function Contact() {
             <p className="mt-6 text-white/60 max-w-md">Speak to our application engineers. We'll respond within one business day with a tailored proposal.</p>
             <div className="mt-12 space-y-5">
               {[
-                { Icon: Phone, l: "+91 98 765 43210", h: "Sales & Support" },
-                { Icon: Mail, l: "sales@vjstrapping.com", h: "Email" },
+                { Icon: Phone, l: "+91 91212 92306", h: "Sales & Support", href: "tel:+919121292306" },
+                { Icon: Mail, l: "sales@vjstrapping.com", h: "Email", href: "mailto:sales@vjstrapping.com" },
                 { Icon: MapPin, l: "Industrial Estate, Mumbai, India", h: "Headquarters" },
-                { Icon: MessageCircle, l: "Chat on WhatsApp", h: "Instant Reply" },
-              ].map(({ Icon, l, h }) => (
-                <div key={l} className="flex items-center gap-4 glass rounded-2xl p-5 hover:bg-white/5 transition-colors group">
-                  <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center group-hover:bg-[var(--gold)] transition-colors">
-                    <Icon className="w-5 h-5 text-[var(--gold)] group-hover:text-[var(--ink)]" />
+                { Icon: MessageCircle, l: "Chat on WhatsApp", h: "Instant Reply", href: "https://wa.me/919121292306" },
+              ].map(({ Icon, l, h, href }) => {
+                const content = (
+                  <>
+                    <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center group-hover:bg-[var(--gold)] transition-colors">
+                      <Icon className="w-5 h-5 text-[var(--gold)] group-hover:text-[var(--ink)]" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs text-white/40 font-num tracking-widest">{h.toUpperCase()}</div>
+                      <div className="font-section truncate">{l}</div>
+                    </div>
+                  </>
+                );
+                return href ? (
+                  <a
+                    key={l}
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-center gap-4 glass rounded-2xl p-5 hover:bg-white/5 transition-colors group cursor-pointer"
+                  >
+                    {content}
+                  </a>
+                ) : (
+                  <div key={l} className="flex items-center gap-4 glass rounded-2xl p-5 hover:bg-white/5 transition-colors group">
+                    {content}
                   </div>
-                  <div className="min-w-0">
-                    <div className="text-xs text-white/40 font-num tracking-widest">{h.toUpperCase()}</div>
-                    <div className="font-section truncate">{l}</div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -1050,7 +1067,7 @@ function FinalCTA() {
         </motion.h2>
         <div className="mt-12 flex flex-wrap justify-center gap-4">
           <MagneticButton href="#contact" primary>Request Quote</MagneticButton>
-          <MagneticButton href="tel:+919876543210">Call Expert</MagneticButton>
+          <MagneticButton href="tel:+919121292306">Call Expert</MagneticButton>
           <MagneticButton href="#products">Get Brochure</MagneticButton>
         </div>
       </div>
@@ -1081,9 +1098,33 @@ function Footer() {
               <button type="button" className="bg-[var(--gold)] text-[var(--ink)] px-5 py-2.5 rounded-full text-sm font-medium">Subscribe</button>
             </form>
           </div>
-          <FooterCol title="Products" links={["Strapping Machines", "Carton Sealers", "PP Strapping Rolls", "BOPP Tapes"]} />
-          <FooterCol title="Company" links={["About", "Quality", "Industries", "Careers"]} />
-          <FooterCol title="Contact" links={["Sales", "Support", "WhatsApp", "Brochure"]} />
+          <FooterCol
+            title="Products"
+            links={[
+              { label: "Strapping Machines", href: "#products" },
+              { label: "Carton Sealers", href: "#products" },
+              { label: "PP Strapping Rolls", href: "#products" },
+              { label: "BOPP Tapes", href: "#products" },
+            ]}
+          />
+          <FooterCol
+            title="Company"
+            links={[
+              { label: "About", href: "#about" },
+              { label: "Quality", href: "#quality" },
+              { label: "Industries", href: "#industries" },
+              { label: "Careers", href: "#contact" },
+            ]}
+          />
+          <FooterCol
+            title="Contact"
+            links={[
+              { label: "Sales", href: "#contact" },
+              { label: "Support", href: "#contact" },
+              { label: "WhatsApp", href: "https://wa.me/919121292306", external: true },
+              { label: "Brochure", href: "#contact" },
+            ]}
+          />
         </div>
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-4 text-xs text-white/40">
           <div>© {new Date().getFullYear()} VJ Strapping Systems. All rights reserved.</div>
@@ -1097,13 +1138,22 @@ function Footer() {
     </footer>
   );
 }
-function FooterCol({ title, links }: { title: string; links: string[] }) {
+function FooterCol({ title, links }: { title: string; links: { label: string; href: string; external?: boolean }[] }) {
   return (
     <div className="md:col-span-2">
       <div className="font-num text-xs tracking-widest text-white/40 mb-4">{title.toUpperCase()}</div>
       <ul className="space-y-3">
         {links.map((l) => (
-          <li key={l}><a href="#" className="text-sm text-white/70 hover:text-[var(--gold)] transition-colors">{l}</a></li>
+          <li key={l.label}>
+            <a
+              href={l.href}
+              target={l.external ? "_blank" : undefined}
+              rel={l.external ? "noopener noreferrer" : undefined}
+              className="text-sm text-white/70 hover:text-[var(--gold)] transition-colors"
+            >
+              {l.label}
+            </a>
+          </li>
         ))}
       </ul>
     </div>
@@ -1130,7 +1180,7 @@ function StickyMobile() {
   return (
     <div className="fixed bottom-4 inset-x-4 z-30 md:hidden flex gap-3">
       <a href="#contact" className="flex-1 bg-[var(--gold)] text-[var(--ink)] py-3 rounded-full text-center font-medium text-sm">Get Quote</a>
-      <a href="https://wa.me/919876543210" className="w-12 h-12 rounded-full bg-[#25D366] flex items-center justify-center"><MessageCircle className="w-5 h-5 text-white" /></a>
+      <a href="https://wa.me/919121292306" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-[#25D366] flex items-center justify-center"><MessageCircle className="w-5 h-5 text-white" /></a>
     </div>
   );
 }
