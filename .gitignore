@@ -34,4 +34,4 @@ dist-ssr
 # Environment secrets & local database
 .env
 data/leads.json
-
+.vercel/
